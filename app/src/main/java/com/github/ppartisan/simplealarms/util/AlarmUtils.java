@@ -1,21 +1,5 @@
 package com.github.ppartisan.simplealarms.util;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.ContentValues;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.util.SparseBooleanArray;
-
-import com.github.ppartisan.simplealarms.data.DatabaseHelper;
-import com.github.ppartisan.simplealarms.model.Alarm;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Locale;
-
 import static com.github.ppartisan.simplealarms.data.DatabaseHelper.COL_FRI;
 import static com.github.ppartisan.simplealarms.data.DatabaseHelper.COL_IS_ENABLED;
 import static com.github.ppartisan.simplealarms.data.DatabaseHelper.COL_LABEL;
@@ -28,23 +12,42 @@ import static com.github.ppartisan.simplealarms.data.DatabaseHelper.COL_TUES;
 import static com.github.ppartisan.simplealarms.data.DatabaseHelper.COL_WED;
 import static com.github.ppartisan.simplealarms.data.DatabaseHelper._ID;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.os.Build;
+import android.util.SparseBooleanArray;
+
+import androidx.core.app.ActivityCompat;
+
+import com.github.ppartisan.simplealarms.data.DatabaseHelper;
+import com.github.ppartisan.simplealarms.model.Alarm;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Locale;
+
 public final class AlarmUtils {
 
     private static final SimpleDateFormat TIME_FORMAT =
             new SimpleDateFormat("h:mm", Locale.getDefault());
     private static final SimpleDateFormat AM_PM_FORMAT =
-            new SimpleDateFormat("a", Locale.getDefault());
+            new SimpleDateFormat("a", Locale.ENGLISH);
 
     private static final int REQUEST_ALARM = 1;
     private static final String[] PERMISSIONS_ALARM = {
             Manifest.permission.VIBRATE
     };
 
-    private AlarmUtils() { throw new AssertionError(); }
+    private AlarmUtils() {
+        throw new AssertionError();
+    }
 
     public static void checkAlarmPermissions(Activity activity) {
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return;
         }
 
@@ -52,7 +55,7 @@ public final class AlarmUtils {
                 activity, Manifest.permission.VIBRATE
         );
 
-        if(permission != PackageManager.PERMISSION_GRANTED) {
+        if (permission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                     activity,
                     PERMISSIONS_ALARM,
@@ -92,7 +95,7 @@ public final class AlarmUtils {
 
         final ArrayList<Alarm> alarms = new ArrayList<>(size);
 
-        if (c.moveToFirst()){
+        if (c.moveToFirst()) {
             do {
 
                 final long id = c.getLong(c.getColumnIndex(_ID));
@@ -118,7 +121,9 @@ public final class AlarmUtils {
 
                 alarm.setIsEnabled(isEnabled);
 
-                alarms.add(alarm);
+                if (mon || tues || wed || thurs || fri || sat || sun) {
+                    alarms.add(alarm);
+                }
 
             } while (c.moveToNext());
         }
@@ -132,7 +137,8 @@ public final class AlarmUtils {
     }
 
     public static String getAmPm(long time) {
-        return AM_PM_FORMAT.format(time);
+        String amPm = AM_PM_FORMAT.format(time).toLowerCase(Locale.ROOT);
+        return amPm;
     }
 
     public static boolean isAlarmActive(Alarm alarm) {
@@ -155,16 +161,16 @@ public final class AlarmUtils {
 
         StringBuilder builder = new StringBuilder("Active Days: ");
 
-        if(alarm.getDay(Alarm.MON)) builder.append("Monday, ");
-        if(alarm.getDay(Alarm.TUES)) builder.append("Tuesday, ");
-        if(alarm.getDay(Alarm.WED)) builder.append("Wednesday, ");
-        if(alarm.getDay(Alarm.THURS)) builder.append("Thursday, ");
-        if(alarm.getDay(Alarm.FRI)) builder.append("Friday, ");
-        if(alarm.getDay(Alarm.SAT)) builder.append("Saturday, ");
-        if(alarm.getDay(Alarm.SUN)) builder.append("Sunday.");
+        if (alarm.getDay(Alarm.MON)) builder.append("Monday, ");
+        if (alarm.getDay(Alarm.TUES)) builder.append("Tuesday, ");
+        if (alarm.getDay(Alarm.WED)) builder.append("Wednesday, ");
+        if (alarm.getDay(Alarm.THURS)) builder.append("Thursday, ");
+        if (alarm.getDay(Alarm.FRI)) builder.append("Friday, ");
+        if (alarm.getDay(Alarm.SAT)) builder.append("Saturday, ");
+        if (alarm.getDay(Alarm.SUN)) builder.append("Sunday.");
 
-        if(builder.substring(builder.length()-2).equals(", ")) {
-            builder.replace(builder.length()-2,builder.length(),".");
+        if (builder.substring(builder.length() - 2).equals(", ")) {
+            builder.replace(builder.length() - 2, builder.length(), ".");
         }
 
         return builder.toString();

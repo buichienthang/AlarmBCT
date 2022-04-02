@@ -4,16 +4,42 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:textColorSecondary">@android:color/black</item>
+        <item name="actionMenuTextColor">@android:color/black</item>
     </style>
 
     <style name="AlertLandingPageTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:textColorSecondary">@android:color/black</item>
+        <item name="actionMenuTextColor">@android:color/black</item>
     </style>
 
     <style name="DeleteAlarmDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/accent</item>
     </style>
 
+    <style name="TimePickerTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/blackblue80</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="NumberPickerStyle">
+        <item name="android:textSize">33sp</item>
+        <item name="android:fontFamily">allerta</item>
+        <item name="colorControlNormal">@color/transparent2</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <style name="DefaultNumberPickerTheme" parent="AppTheme">
+        <item name="colorControlNormal">@color/transparent2</item>
+        <item name="android:textSize">33sp</item>
+        <item name="android:fontFamily">asul_bold</item>
+    </style>
+
+    <color name="transparent2">#00000000</color>
 </resources>

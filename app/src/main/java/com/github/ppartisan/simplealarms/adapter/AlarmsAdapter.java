@@ -2,8 +2,6 @@ package com.github.ppartisan.simplealarms.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -12,10 +10,17 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.github.ppartisan.simplealarms.R;
+import com.github.ppartisan.simplealarms.data.DatabaseHelper;
 import com.github.ppartisan.simplealarms.model.Alarm;
+import com.github.ppartisan.simplealarms.service.AlarmReceiver;
 import com.github.ppartisan.simplealarms.ui.AddEditAlarmActivity;
 import com.github.ppartisan.simplealarms.util.AlarmUtils;
 
@@ -40,11 +45,11 @@ public final class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.View
 
         final Context c = holder.itemView.getContext();
 
-        if(mAccentColor == -1) {
+        if (mAccentColor == -1) {
             mAccentColor = ContextCompat.getColor(c, R.color.accent);
         }
 
-        if(mDays == null){
+        if (mDays == null) {
             mDays = c.getResources().getStringArray(R.array.days_abbreviated);
         }
 
@@ -52,8 +57,8 @@ public final class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.View
 
         holder.time.setText(AlarmUtils.getReadableTime(alarm.getTime()));
         holder.amPm.setText(AlarmUtils.getAmPm(alarm.getTime()));
-        holder.label.setText(alarm.getLabel());
         holder.days.setText(buildSelectedDays(alarm));
+        holder.swStatusAlarm.setChecked(alarm.isEnabled());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +70,19 @@ public final class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.View
                         );
                 launchEditAlarmIntent.putExtra(AddEditAlarmActivity.ALARM_EXTRA, alarm);
                 c.startActivity(launchEditAlarmIntent);
+            }
+        });
+
+        holder.swStatusAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    AlarmReceiver.setReminderAlarm(c, alarm);
+                } else {
+                    AlarmReceiver.cancelReminderAlarm(c, alarm);
+                }
+                alarm.setIsEnabled(b);
+                DatabaseHelper.getInstance(c).updateAlarm(alarm);
             }
         });
 
@@ -95,7 +113,7 @@ public final class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.View
             endIndex = startIndex + dayText.length();
 
             final boolean isSelected = days.valueAt(i);
-            if(isSelected) {
+            if (isSelected) {
                 span = new ForegroundColorSpan(mAccentColor);
                 builder.setSpan(span, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
@@ -112,15 +130,16 @@ public final class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.View
 
     static final class ViewHolder extends RecyclerView.ViewHolder {
 
-        final TextView time, amPm, label, days;
+        final TextView time, amPm, days;
+        Switch swStatusAlarm;
 
         ViewHolder(View itemView) {
             super(itemView);
 
             time = itemView.findViewById(R.id.ar_time);
             amPm = itemView.findViewById(R.id.ar_am_pm);
-            label = itemView.findViewById(R.id.ar_label);
             days = itemView.findViewById(R.id.ar_days);
+            swStatusAlarm = itemView.findViewById(R.id.sw_status_alarm);
 
         }
     }

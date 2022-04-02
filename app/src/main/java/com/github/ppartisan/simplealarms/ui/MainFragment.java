@@ -1,42 +1,29 @@
 package com.github.ppartisan.simplealarms.ui;
 
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.ppartisan.simplealarms.R;
-import com.github.ppartisan.simplealarms.adapter.AlarmsAdapter;
-import com.github.ppartisan.simplealarms.model.Alarm;
-import com.github.ppartisan.simplealarms.service.LoadAlarmsReceiver;
-import com.github.ppartisan.simplealarms.service.LoadAlarmsService;
-import com.github.ppartisan.simplealarms.util.AlarmUtils;
-import com.github.ppartisan.simplealarms.view.DividerItemDecoration;
-import com.github.ppartisan.simplealarms.view.EmptyRecyclerView;
+import com.github.ppartisan.simplealarms.adapter.ViewPagerAdapter;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
-import static com.github.ppartisan.simplealarms.ui.AddEditAlarmActivity.ADD_ALARM;
-import static com.github.ppartisan.simplealarms.ui.AddEditAlarmActivity.buildAddEditAlarmActivityIntent;
+public final class MainFragment extends Fragment{
 
-public final class MainFragment extends Fragment
-        implements LoadAlarmsReceiver.OnAlarmsLoadedListener {
-
-    private LoadAlarmsReceiver mReceiver;
-    private AlarmsAdapter mAdapter;
+    private BottomNavigationView bottomNavigationView;
+    private ViewPager viewPager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mReceiver = new LoadAlarmsReceiver(this);
     }
 
     @Nullable
@@ -45,42 +32,69 @@ public final class MainFragment extends Fragment
 
         final View v = inflater.inflate(R.layout.fragment_main, container, false);
 
-        final EmptyRecyclerView rv = v.findViewById(R.id.recycler);
-        mAdapter = new AlarmsAdapter();
-        rv.setEmptyView(v.findViewById(R.id.empty_view));
-        rv.setAdapter(mAdapter);
-        rv.addItemDecoration(new DividerItemDecoration(getContext()));
-        rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv.setItemAnimator(new DefaultItemAnimator());
+        viewPager = v.findViewById(R.id.view_pager);
+        setupViewPager();
 
-        final FloatingActionButton fab = v.findViewById(R.id.fab);
-        fab.setOnClickListener(view -> {
-            AlarmUtils.checkAlarmPermissions(getActivity());
-            final Intent i = buildAddEditAlarmActivityIntent(getContext(), ADD_ALARM);
-            startActivity(i);
+        bottomNavigationView = v.findViewById(R.id.navigation_header_container);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                switch (menuItem.getItemId()){
+                    case R.id.action_alarm:
+                        viewPager.setCurrentItem(0);
+                        break;
+                    case R.id.action_timer:
+                        viewPager.setCurrentItem(1);
+                        break;
+                    case R.id.action_stopwatch:
+                        viewPager.setCurrentItem(2);
+                        break;
+                    case R.id.action_setting:
+                        viewPager.setCurrentItem(3);
+                        break;
+                }
+
+                return true;
+            }
         });
 
         return v;
 
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        final IntentFilter filter = new IntentFilter(LoadAlarmsService.ACTION_COMPLETE);
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mReceiver, filter);
-        LoadAlarmsService.launchLoadAlarmsService(getContext());
-    }
+    private void setupViewPager() {
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        viewPager.setAdapter(viewPagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mReceiver);
-    }
+            }
 
-    @Override
-    public void onAlarmsLoaded(ArrayList<Alarm> alarms) {
-        mAdapter.setAlarms(alarms);
+            @Override
+            public void onPageSelected(int position) {
+                switch (position){
+                    case 0:
+                        bottomNavigationView.getMenu().findItem(R.id.action_alarm).setChecked(true);
+                        break;
+                    case 1:
+                        bottomNavigationView.getMenu().findItem(R.id.action_timer).setChecked(true);
+                        break;
+                    case 2:
+                        bottomNavigationView.getMenu().findItem(R.id.action_stopwatch).setChecked(true);
+                        break;
+                    case 3:
+                        bottomNavigationView.getMenu().findItem(R.id.action_setting).setChecked(true);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
 }

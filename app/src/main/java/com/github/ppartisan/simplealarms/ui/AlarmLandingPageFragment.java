@@ -10,8 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.Vibrator;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +18,9 @@ import android.widget.TextView;
 
 import com.github.ppartisan.simplealarms.R;
 import static android.content.Context.VIBRATOR_SERVICE;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 public final class AlarmLandingPageFragment extends Fragment implements SensorEventListener {
     private  long lastTime;

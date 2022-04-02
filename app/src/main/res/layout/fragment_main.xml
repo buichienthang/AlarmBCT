@@ -1,31 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/primary_dark"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="10dp">
 
-    <com.github.ppartisan.simplealarms.view.EmptyRecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <TextView
-        android:id="@+id/empty_view"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/empty_view_text"/>
+        android:layout_below="@+id/navigation_header_container"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation_header_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/fab_margin_default"
-        android:layout_marginRight="@dimen/fab_margin_default"
-        android:layout_marginBottom="@dimen/fab_margin_default"
-        app:srcCompat="@drawable/ic_alarm_white_24dp"
-        app:fabSize="auto"/>
+        android:background="@color/primary_dark"
+        app:elevation="0dp"
+        app:menu="@menu/navigation_menu"
+        app:itemIconTint="@color/bnv_tab_item_foreground"
+        app:itemTextColor="@color/bnv_tab_item_foreground"/>
 
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

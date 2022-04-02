@@ -2,11 +2,16 @@ package com.github.ppartisan.simplealarms.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.IntDef;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.github.ppartisan.simplealarms.R;
 import com.github.ppartisan.simplealarms.data.DatabaseHelper;
@@ -34,8 +39,12 @@ public final class AddEditAlarmActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_alarm);
 
         //noinspection ConstantConditions
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getToolbarTitle());
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true); add button back toolbar
+
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
+//        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(R.drawable.divider));
+
 
         final Alarm alarm = getAlarm();
 

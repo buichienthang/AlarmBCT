@@ -1,14 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 31
     defaultConfig {
         applicationId "com.github.ppartisan.simplealarms"
         //Priority levels: 999 is max, 0 is default, -999 is min
         manifestPlaceholders = [bootPriority:"999"]
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -28,6 +27,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -38,4 +41,9 @@ dependencies {
     implementation "com.android.support:design:$support"
     implementation "com.android.support:gridlayout-v7:$support"
     testImplementation 'junit:junit:4.12'
+
+    def lottieVersion = "5.0.0"
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+
+//    implementation 'com.github.giliy:CircularTimerClock-Android:0.1.1'
 }

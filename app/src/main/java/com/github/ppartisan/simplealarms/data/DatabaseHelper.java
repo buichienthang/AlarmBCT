@@ -81,7 +81,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 
     public int updateAlarm(Alarm alarm) {
         final String where = _ID + "=?";
-        final String[] whereArgs = new String[] { Long.toString(alarm.getId()) };
+        final String[] whereArgs = new String[]{Long.toString(alarm.getId())};
         return getWritableDatabase()
                 .update(TABLE_NAME, AlarmUtils.toContentValues(alarm), where, whereArgs);
     }
@@ -92,7 +92,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 
     int deleteAlarm(long id) {
         final String where = _ID + "=?";
-        final String[] whereArgs = new String[] { Long.toString(id) };
+        final String[] whereArgs = new String[]{Long.toString(id)};
         return getWritableDatabase().delete(TABLE_NAME, where, whereArgs);
     }
 
@@ -100,7 +100,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 
         Cursor c = null;
 
-        try{
+        try {
             c = getReadableDatabase().query(TABLE_NAME, null, null, null, null, null, null);
             return AlarmUtils.buildAlarmList(c);
         } finally {

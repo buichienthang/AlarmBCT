@@ -3,7 +3,8 @@ package com.github.ppartisan.simplealarms.service;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.github.ppartisan.simplealarms.data.DatabaseHelper;
 import com.github.ppartisan.simplealarms.model.Alarm;
@@ -30,6 +31,7 @@ public final class LoadAlarmsService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
         final List<Alarm> alarms = DatabaseHelper.getInstance(this).getAlarms();
+        //ss
 
         final Intent i = new Intent(ACTION_COMPLETE);
         i.putParcelableArrayListExtra(ALARMS_EXTRA, new ArrayList<>(alarms));

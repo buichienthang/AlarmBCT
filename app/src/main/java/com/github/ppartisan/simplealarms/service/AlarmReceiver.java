@@ -1,36 +1,35 @@
 package com.github.ppartisan.simplealarms.service;
 
-import android.app.AlarmManager;
-import android.app.AlarmManager.AlarmClockInfo;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.media.RingtoneManager;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.util.SparseBooleanArray;
-
-import com.github.ppartisan.simplealarms.R;
-import com.github.ppartisan.simplealarms.model.Alarm;
-import com.github.ppartisan.simplealarms.util.AlarmUtils;
-
-import java.util.Calendar;
-import java.util.List;
-
 import static android.app.NotificationManager.IMPORTANCE_HIGH;
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.KITKAT;
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static android.os.Build.VERSION_CODES.O;
-import static com.github.ppartisan.simplealarms.ui.AlarmLandingPageActivity.launchIntent;
+
+import android.app.AlarmManager;
+import android.app.AlarmManager.AlarmClockInfo;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.util.SparseBooleanArray;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+
+import com.github.ppartisan.simplealarms.R;
+import com.github.ppartisan.simplealarms.model.Alarm;
+import com.github.ppartisan.simplealarms.ui.showAlarmActivity;
+import com.github.ppartisan.simplealarms.util.AlarmUtils;
+
+import java.util.Calendar;
+import java.util.List;
 
 public final class AlarmReceiver extends BroadcastReceiver {
 
@@ -43,35 +42,71 @@ public final class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        // lấy alarm
         final Alarm alarm = intent.getBundleExtra(BUNDLE_EXTRA).getParcelable(ALARM_KEY);
         if(alarm == null) {
             Log.e(TAG, "Alarm is null", new NullPointerException());
             return;
         }
 
-        final int id = alarm.notificationId();
+//        Intent fullScreenIntent = new Intent(context, showAlarmActivity.class);
+//        PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(context, 1000,
+//                fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//        final int id = alarm.notificationId();
+//
+//        final NotificationManager manager =
+//                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//        createNotificationChannel(context);
+//
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
+//        builder.setSmallIcon(R.drawable.ic_alarm_white_24dp);
+//        builder.setColor(ContextCompat.getColor(context, R.color.accent));
+//        builder.setContentTitle(context.getString(R.string.app_name));
+//        builder.setContentText(alarm.getLabel());
+//        builder.setTicker(alarm.getLabel());
+//        builder.setVibrate(new long[] {1000,500,1000,500,1000,500});
+//        builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+//        builder.setContentIntent(launchAlarmLandingPage(context, alarm));
+//        builder.setAutoCancel(false);
+//        builder.setPriority(Notification.PRIORITY_HIGH);
+//        builder.setCategory(NotificationCompat.CATEGORY_CALL);
+//        builder.setFullScreenIntent(fullScreenPendingIntent,true);
+//
+//        manager.notify(id, builder.build());
 
-        final NotificationManager manager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        Log.e("sss","aa");
 
-        createNotificationChannel(context);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
-        builder.setSmallIcon(R.drawable.ic_alarm_white_24dp);
-        builder.setColor(ContextCompat.getColor(context, R.color.accent));
-        builder.setContentTitle(context.getString(R.string.app_name));
-        builder.setContentText(alarm.getLabel());
-        builder.setTicker(alarm.getLabel());
-        builder.setVibrate(new long[] {1000,500,1000,500,1000,500});
-        builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-        builder.setContentIntent(launchAlarmLandingPage(context, alarm));
-        builder.setAutoCancel(true);
-        builder.setPriority(Notification.PRIORITY_HIGH);
-
-        manager.notify(id, builder.build());
+        startMussic(context,alarm);
 
         //Reset Alarm manually
         setReminderAlarm(context, alarm);
+
+    }
+
+    private void startMussic(Context context,Alarm alarm) {
+        // bắt đầu một service mới
+//        Intent intent = new Intent(context, MusicService.class);
+//        context.startService(intent);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            Intent intent = new Intent(context, MusicService.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(ALARM_KEY, alarm);
+            intent.putExtra(BUNDLE_EXTRA, bundle);
+            intent.putExtra("check_play","on");
+            ContextCompat.startForegroundService(context, intent);
+        } else {
+            Intent intent = new Intent(context, MusicService.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(ALARM_KEY, alarm);
+            intent.putExtra(BUNDLE_EXTRA, bundle);
+            intent.putExtra("check_play","on");
+            context.startService(intent);
+        }
+
     }
 
     //Convenience method for setting a notification
@@ -207,9 +242,9 @@ public final class AlarmReceiver extends BroadcastReceiver {
     }
 
     private static PendingIntent launchAlarmLandingPage(Context ctx, Alarm alarm) {
+        Intent intent = new Intent(ctx,showAlarmActivity.class);
         return PendingIntent.getActivity(
-                ctx, alarm.notificationId(), launchIntent(ctx), FLAG_UPDATE_CURRENT
-        );
+                ctx, alarm.notificationId(), intent, FLAG_UPDATE_CURRENT);
     }
 
     private static class ScheduleAlarm {
