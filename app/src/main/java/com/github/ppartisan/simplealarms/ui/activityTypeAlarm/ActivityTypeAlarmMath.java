@@ -47,7 +47,7 @@ public class ActivityTypeAlarmMath extends AppCompatActivity {
         tvSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                typeAlarm = new TypeAlarm("math",npLevelMath.getValue(),npTurnMath.getValue(),null,null,null);
+                typeAlarm = new TypeAlarm("math",npLevelMath.getValue(),npTurnMath.getValue(),0,null);
                 save(typeAlarm);
             }
         });

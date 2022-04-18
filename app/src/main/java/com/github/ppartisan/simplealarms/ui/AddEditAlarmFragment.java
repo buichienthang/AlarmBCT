@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,7 @@ public final class AddEditAlarmFragment extends Fragment {
     private static final String TYPE_ALARM_WALK_STRING = "walk";
     private static final String TYPE_ALARM_VIBRATE_STRING = "vibrate";
     private static final String TYPE_ALARM_OFF_STRING = "off";
+    private static final String TABLE_NAME = "type_alarm";
 
     private static final int TYPE_ALARM_MATH = 0;
     private static final int TYPE_ALARM_WRITE = 1;
@@ -88,7 +90,11 @@ public final class AddEditAlarmFragment extends Fragment {
 
 //        setHasOptionsMenu(true);
 
+        createDB();
+
         final Alarm alarm = getAlarm();
+
+        typeAlarm = getTypeAlarm(alarm.getId());
 
         mTimePicker = (TimePicker) v.findViewById(R.id.edit_alarm_time_picker);
         ViewUtils.setTimePickerTime(mTimePicker, alarm.getTime());
@@ -135,32 +141,14 @@ public final class AddEditAlarmFragment extends Fragment {
 
         setUpResultTypeAlarm();
 
-
         setDayCheckboxes(alarm);
+
+        setTypeAlarm(typeAlarm);
 
         return v;
     }
 
-    private void setUpResultTypeAlarm() {
-
-        someActivityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            // There are no request codes
-                            Intent data = result.getData();
-                            doSomeOperations(data);
-                        }
-                    }
-                });
-    }
-
-    private void doSomeOperations(Intent data) {
-
-        typeAlarm = data.getBundleExtra(BUNDLE_EXTRA).getParcelable(TYPE_ALARM_KEY);
-
+    private void setTypeAlarm(TypeAlarm typeAlarm) {
         switch (typeAlarm.getTypeTurnOffAlarm()) {
             case TYPE_ALARM_MATH_STRING:
                 tvGame.setText(typeAlarm.getTypeTurnOffAlarm());
@@ -191,7 +179,83 @@ public final class AddEditAlarmFragment extends Fragment {
                 tvGame.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_alarm, 0, 0, 0);
                 break;
         }
+    }
 
+    private void createDB() {
+        String _ID = "_id";
+        String COL_TYPE_ALARM = "type_alarm";
+        String COL_TURN = "turn";
+        String COL_LEVEL = "level";
+        String COL_AUTO_EDIT = "auto_edit";
+        String COL_CONTENT_TYPE_WRITE = "content_type_write";
+        String COL_ID_QR = "id_qr";
+
+        final String CREATE_TYPE_ALARMS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
+                _ID + " INTEGER PRIMARY KEY , " +
+                COL_TYPE_ALARM + " TEXT, " +
+                COL_LEVEL + " INTEGER , " +
+                COL_TURN + " INTEGER , " +
+                COL_ID_QR + " INTEGER, " +
+                COL_AUTO_EDIT + " TEXT" +
+                ");";
+
+        dataBase = new DatabaseTypeAlarm(getContext(), "typealarm.sqlite", null, 1);
+
+        dataBase.queryData(CREATE_TYPE_ALARMS_TABLE);
+    }
+
+    private TypeAlarm getTypeAlarm(long id) {
+        TypeAlarm typeAlarm = null;
+
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE _id = " + id + " ;";
+
+        Cursor cursor = dataBase.getData(sql);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    // on below line we are adding the data from cursor to our array list.
+                    typeAlarm = new TypeAlarm(cursor.getString(1),
+                            cursor.getInt(2),
+                            cursor.getInt(3),
+                            cursor.getInt(4),
+                            cursor.getString(5));
+                } while (cursor.moveToNext());
+                // moving our cursor to next.
+            }
+            // at last closing our cursor
+            // and returning our array list.
+            cursor.close();
+        }
+
+        if (typeAlarm != null) {
+            return typeAlarm;
+        }else {
+            return new TypeAlarm("off",0,0,0,null);
+        }
+    }
+
+    private void setUpResultTypeAlarm() {
+
+        someActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            // There are no request codes
+                            Intent data = result.getData();
+                            doSomeOperations(data);
+                        }
+                    }
+                });
+    }
+
+    private void doSomeOperations(Intent data) {
+
+        typeAlarm = data.getBundleExtra(BUNDLE_EXTRA).getParcelable(TYPE_ALARM_KEY);
+
+        setTypeAlarm(typeAlarm);
 
         dialog.dismiss();
     }
@@ -339,36 +403,13 @@ public final class AddEditAlarmFragment extends Fragment {
 
     private void saveTypeAlarm(TypeAlarm typeAlarm, long id) {
 
-        String TABLE_NAME = "type_alarm";
-        String _ID = "_id";
-        String COL_TYPE_ALARM = "type_alarm";
-        String COL_TURN = "turn";
-        String COL_LEVEL = "level";
-        String COL_AUTO_EDIT = "auto_edit";
-        String COL_CONTENT_TYPE_WRITE = "content_type_write";
-        String COL_ID_QR = "id_qr";
-
-        dataBase = new DatabaseTypeAlarm(getContext(), "typealarm.sqlite", null, 1);
-
-        final String CREATE_TYPE_ALARMS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
-                _ID + " INTEGER PRIMARY KEY , " +
-                COL_TYPE_ALARM + " TEXT, " +
-                COL_TURN + " INTEGER , " +
-                COL_LEVEL + " INTEGER , " +
-                COL_AUTO_EDIT + " TEXT, " +
-                COL_ID_QR + " INTEGER" +
-                ");";
-
-        dataBase.queryData(CREATE_TYPE_ALARMS_TABLE);
-
         String sql = "INSERT INTO " + TABLE_NAME + " VALUES (" +
                 id + "," +
                 "'" + typeAlarm.getTypeTurnOffAlarm() + "'" + "," +
-                typeAlarm.getTimes() + "," +
                 typeAlarm.getLevel() + "," +
-                "'" + typeAlarm.getTypeWrite() + "'" + "," +
-                "'" + typeAlarm.getNameQr() + "'" + "," +
-                "'" + typeAlarm.getQrToText() + "'" +
+                typeAlarm.getTimes() + "," +
+                "'" + typeAlarm.getIdQrcode() + "'" + "," +
+                "'" + typeAlarm.getTypeWrite() + "'" +
                 ");";
 
         dataBase.queryData(sql);

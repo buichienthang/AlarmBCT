@@ -19,7 +19,7 @@ public class ActivityTypeAlarmOFF extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_type_alarm_off);
 
-        TypeAlarm typeAlarm = new TypeAlarm("off",0,0,null,null,null);
+        TypeAlarm typeAlarm = new TypeAlarm("off",0,0,0,null);
         Intent returnIntent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putParcelable(TYPE_ALARM_KEY, typeAlarm);

@@ -45,7 +45,7 @@ public class ActivityTypeAlarmVibrate extends AppCompatActivity {
         tvSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                typeAlarm = new TypeAlarm("vibrate",0, npVibrate.getValue(),null,null,null);
+                typeAlarm = new TypeAlarm("vibrate",0, npVibrate.getValue(),0,null);
                 save(typeAlarm);
             }
         });

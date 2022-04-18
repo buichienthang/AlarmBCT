@@ -1,6 +1,9 @@
 package com.github.ppartisan.simplealarms.model;
 
-public class TypeAlarm {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class TypeAlarm implements Parcelable {
     String typeTurnOffAlarm;
     int level, times, idQrcode;
     String typeWrite;
@@ -12,6 +15,26 @@ public class TypeAlarm {
         this.idQrcode = idQrcode;
         this.typeWrite = typeWrite;
     }
+
+    protected TypeAlarm(Parcel in) {
+        typeTurnOffAlarm = in.readString();
+        level = in.readInt();
+        times = in.readInt();
+        idQrcode = in.readInt();
+        typeWrite = in.readString();
+    }
+
+    public static final Creator<TypeAlarm> CREATOR = new Creator<TypeAlarm>() {
+        @Override
+        public TypeAlarm createFromParcel(Parcel in) {
+            return new TypeAlarm(in);
+        }
+
+        @Override
+        public TypeAlarm[] newArray(int size) {
+            return new TypeAlarm[size];
+        }
+    };
 
     public String getTypeTurnOffAlarm() {
         return typeTurnOffAlarm;
@@ -51,5 +74,19 @@ public class TypeAlarm {
 
     public void setTypeWrite(String typeWrite) {
         this.typeWrite = typeWrite;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(typeTurnOffAlarm);
+        parcel.writeInt(level);
+        parcel.writeInt(times);
+        parcel.writeInt(idQrcode);
+        parcel.writeString(typeWrite);
     }
 }

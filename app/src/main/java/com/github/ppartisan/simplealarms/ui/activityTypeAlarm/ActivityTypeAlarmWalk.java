@@ -45,7 +45,7 @@ public class ActivityTypeAlarmWalk extends AppCompatActivity {
         tvSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                typeAlarm = new TypeAlarm("walk",0,npWalk.getValue(),null,null,null);
+                typeAlarm = new TypeAlarm("walk",0,npWalk.getValue(),0,null);
                 save(typeAlarm);
             }
         });

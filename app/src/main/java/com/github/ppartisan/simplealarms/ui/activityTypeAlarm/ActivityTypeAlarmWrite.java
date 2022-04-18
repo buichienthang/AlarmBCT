@@ -228,7 +228,7 @@ public class ActivityTypeAlarmWrite extends AppCompatActivity {
         tvSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                typeAlarm = new TypeAlarm("write", 0, npTurnWrite.getValue(), getTypeWrite(), null, null);
+                typeAlarm = new TypeAlarm("write", 0, npTurnWrite.getValue(), 0, getTypeWrite());
                 save(typeAlarm);
             }
         });

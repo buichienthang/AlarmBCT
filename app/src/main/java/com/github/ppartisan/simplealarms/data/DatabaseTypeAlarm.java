@@ -71,7 +71,6 @@ public class DatabaseTypeAlarm extends SQLiteOpenHelper {
 
     public Cursor getData(String sql) {
         SQLiteDatabase database = getReadableDatabase();
-        database.execSQL(sql);
         return database.rawQuery(sql, null);
     }
 //
