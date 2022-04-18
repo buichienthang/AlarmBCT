@@ -23,9 +23,9 @@
             android:background="@drawable/boder_tow_top"
             android:padding="5dp"
             android:text="@string/time"
-            android:textSize="20sp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/blackblue80"
+            android:textSize="20sp"
             tools:text="Time" />
 
         <TimePicker
@@ -35,7 +35,6 @@
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:background="@drawable/boder_tow_bottom"
-            android:theme="@style/NumberPickerStyle"
             android:timePickerMode="spinner" />
 
         <TextView
@@ -44,20 +43,42 @@
             android:background="@drawable/boder_tow_top"
             android:padding="5dp"
             android:text="@string/alarm_type"
-            android:textSize="20sp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/blackblue80"/>
+            android:textColor="@color/blackblue80"
+            android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/tv_type_alarm"
+        <RelativeLayout
+            android:id="@+id/rl_type_alarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:background="@drawable/boder_tow_bottom"
             android:fontFamily="@font/allerta"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
             android:padding="10dp"
-            android:text="@string/choose_type_alarm"
-            android:textColor="@color/accent" />
+            android:textColor="@color/accent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/allerta"
+                android:layout_centerVertical="true"
+                android:text="@string/choose_type_alarm"
+                android:textColor="@color/blackblue60" />
+
+            <TextView
+                android:id="@+id/tv_game"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:drawablePadding="5dp"
+                android:fontFamily="@font/allerta"
+                android:text="Off"
+                android:textColor="@color/accent" />
+        </RelativeLayout>
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -65,9 +86,9 @@
             android:background="@drawable/boder_tow_top"
             android:padding="5dp"
             android:text="@string/label"
-            android:textSize="20sp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/blackblue80"
+            android:textSize="20sp"
             tools:text="Label" />
 
         <EditText
@@ -92,10 +113,10 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/boder_tow_top"
                 android:padding="5dp"
-                android:textSize="20sp"
                 android:text="@string/repeat"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/blackblue80"
+                android:textSize="20sp"
                 tools:text="Days" />
 
             <TextView

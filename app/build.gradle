@@ -45,5 +45,8 @@ dependencies {
     def lottieVersion = "5.0.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
 
+    implementation 'com.journeyapps:zxing-android-embedded:3.1.0@aar'
+    implementation 'com.google.zxing:core:3.2.0'
+
 //    implementation 'com.github.giliy:CircularTimerClock-Android:0.1.1'
 }

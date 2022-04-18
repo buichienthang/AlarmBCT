@@ -2,13 +2,15 @@ package com.github.ppartisan.simplealarms.model;
 
 public class TypeAlarm {
     String typeTurnOffAlarm;
-    int level;
-    int times;
+    int level, times, idQrcode;
+    String typeWrite;
 
-    public TypeAlarm(String typeTurnOffAlarm, int level, int times) {
+    public TypeAlarm(String typeTurnOffAlarm, int level, int times, int idQrcode, String typeWrite) {
         this.typeTurnOffAlarm = typeTurnOffAlarm;
         this.level = level;
         this.times = times;
+        this.idQrcode = idQrcode;
+        this.typeWrite = typeWrite;
     }
 
     public String getTypeTurnOffAlarm() {
@@ -33,5 +35,21 @@ public class TypeAlarm {
 
     public void setTimes(int times) {
         this.times = times;
+    }
+
+    public int getIdQrcode() {
+        return idQrcode;
+    }
+
+    public void setIdQrcode(int idQrcode) {
+        this.idQrcode = idQrcode;
+    }
+
+    public String getTypeWrite() {
+        return typeWrite;
+    }
+
+    public void setTypeWrite(String typeWrite) {
+        this.typeWrite = typeWrite;
     }
 }

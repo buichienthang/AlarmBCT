@@ -17,7 +17,7 @@ public class ChooseTypeAlarm extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choose_type_alarm);
+        setContentView(R.layout.dialog_choose_type_alarm);
 
 //        tvSave = findViewById(R.id.tv_save);
 //        tvDelete = findViewById(R.id.tv_delete);

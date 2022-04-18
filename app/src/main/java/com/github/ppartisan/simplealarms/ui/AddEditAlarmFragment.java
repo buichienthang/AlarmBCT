@@ -26,27 +26,49 @@ import androidx.fragment.app.Fragment;
 
 import com.github.ppartisan.simplealarms.R;
 import com.github.ppartisan.simplealarms.data.DatabaseHelper;
+import com.github.ppartisan.simplealarms.data.DatabaseTypeAlarm;
 import com.github.ppartisan.simplealarms.model.Alarm;
 import com.github.ppartisan.simplealarms.model.TypeAlarm;
 import com.github.ppartisan.simplealarms.service.AlarmReceiver;
 import com.github.ppartisan.simplealarms.service.LoadAlarmsService;
+import com.github.ppartisan.simplealarms.ui.activityTypeAlarm.ActivityTypeAlarmMath;
+import com.github.ppartisan.simplealarms.ui.activityTypeAlarm.ActivityTypeAlarmOFF;
+import com.github.ppartisan.simplealarms.ui.activityTypeAlarm.ActivityTypeAlarmScanQr;
+import com.github.ppartisan.simplealarms.ui.activityTypeAlarm.ActivityTypeAlarmVibrate;
+import com.github.ppartisan.simplealarms.ui.activityTypeAlarm.ActivityTypeAlarmWalk;
+import com.github.ppartisan.simplealarms.ui.activityTypeAlarm.ActivityTypeAlarmWrite;
 import com.github.ppartisan.simplealarms.util.ViewUtils;
 
 import java.util.Calendar;
 
 public final class AddEditAlarmFragment extends Fragment {
 
+    private static final String TYPE_ALARM_MATH_STRING = "math";
+    private static final String TYPE_ALARM_WRITE_STRING = "write";
+    private static final String TYPE_ALARM_SCANQR_STRING = "scanqr";
+    private static final String TYPE_ALARM_WALK_STRING = "walk";
+    private static final String TYPE_ALARM_VIBRATE_STRING = "vibrate";
+    private static final String TYPE_ALARM_OFF_STRING = "off";
+
     private static final int TYPE_ALARM_MATH = 0;
     private static final int TYPE_ALARM_WRITE = 1;
     private static final int TYPE_ALARM_SCANQR = 2;
     private static final int TYPE_ALARM_WALK = 3;
     private static final int TYPE_ALARM_VIBRATE = 4;
+    private static final int TYPE_ALARM_OFF = 5;
     private TimePicker mTimePicker;
     private EditText mLabel;
     private CheckBox mMon, mTues, mWed, mThurs, mFri, mSat, mSun;
-    private TextView tvSave, tvDelete, tvTypeAlarm;
+    private TextView tvSave, tvDelete, tvGame;
+    private RelativeLayout rlTypeAlarm;
     private ActivityResultLauncher<Intent> someActivityResultLauncher;
     private TypeAlarm typeAlarm;
+    private DatabaseTypeAlarm dataBase;
+
+    private static final String BUNDLE_EXTRA = "bundle_extra";
+    private static final String TYPE_ALARM_KEY = "type_alarm_key";
+    private Dialog dialog;
+
 
     public static Fragment newInstance(Alarm alarm) {
 
@@ -87,9 +109,10 @@ public final class AddEditAlarmFragment extends Fragment {
         mSun = (CheckBox) v.findViewById(R.id.edit_alarm_sun);
         tvSave = v.findViewById(R.id.tv_save);
         tvDelete = v.findViewById(R.id.tv_delete);
-        tvTypeAlarm = v.findViewById(R.id.tv_type_alarm);
+        rlTypeAlarm = v.findViewById(R.id.rl_type_alarm);
+        tvGame = v.findViewById(R.id.tv_game);
 
-        tvTypeAlarm.setOnClickListener(new View.OnClickListener() {
+        rlTypeAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openDialogTypeAlarm();
@@ -135,8 +158,42 @@ public final class AddEditAlarmFragment extends Fragment {
     }
 
     private void doSomeOperations(Intent data) {
-        Toast.makeText(getContext(), data.getStringExtra("result"), Toast.LENGTH_SHORT).show();
-//        typeAlarm = new TypeAlarm();
+
+        typeAlarm = data.getBundleExtra(BUNDLE_EXTRA).getParcelable(TYPE_ALARM_KEY);
+
+        switch (typeAlarm.getTypeTurnOffAlarm()) {
+            case TYPE_ALARM_MATH_STRING:
+                tvGame.setText(typeAlarm.getTypeTurnOffAlarm());
+                tvGame.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_icmath, 0, 0, 0);
+                break;
+            case TYPE_ALARM_WRITE_STRING:
+                tvGame.setText(typeAlarm.getTypeTurnOffAlarm());
+                tvGame.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_icwrite, 0, 0, 0);
+                break;
+            case TYPE_ALARM_SCANQR_STRING:
+                tvGame.setText(typeAlarm.getTypeTurnOffAlarm());
+                tvGame.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_qrcode, 0, 0, 0);
+                break;
+            case TYPE_ALARM_WALK_STRING:
+                tvGame.setText(typeAlarm.getTypeTurnOffAlarm());
+                tvGame.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_walk, 0, 0, 0);
+                break;
+            case TYPE_ALARM_VIBRATE_STRING:
+                tvGame.setText(typeAlarm.getTypeTurnOffAlarm());
+                tvGame.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_vibrate, 0, 0, 0);
+                break;
+            case TYPE_ALARM_OFF_STRING:
+                tvGame.setText(typeAlarm.getTypeTurnOffAlarm());
+                tvGame.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_alarm, 0, 0, 0);
+                break;
+            default:
+                tvGame.setText(typeAlarm.getTypeTurnOffAlarm());
+                tvGame.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_alarm, 0, 0, 0);
+                break;
+        }
+
+
+        dialog.dismiss();
     }
 
     private void openActivityChooseTypeAlarm(int intAlarmType) {
@@ -157,14 +214,17 @@ public final class AddEditAlarmFragment extends Fragment {
             case TYPE_ALARM_VIBRATE:
                 intent = new Intent(getContext(), ActivityTypeAlarmVibrate.class);
                 break;
+            case TYPE_ALARM_OFF:
+                intent = new Intent(getContext(), ActivityTypeAlarmOFF.class);
+                break;
 
         }
         someActivityResultLauncher.launch(intent);
     }
 
     private void openDialogTypeAlarm() {
-        Dialog dialog = new Dialog(getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-        dialog.setContentView(R.layout.activity_choose_type_alarm);
+        dialog = new Dialog(getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        dialog.setContentView(R.layout.dialog_choose_type_alarm);
 
         RelativeLayout rlOut = dialog.findViewById(R.id.rl_back);
         rlOut.setOnClickListener(new View.OnClickListener() {
@@ -214,6 +274,14 @@ public final class AddEditAlarmFragment extends Fragment {
             }
         });
 
+        LinearLayout llOff = dialog.findViewById(R.id.ll_off);
+        llOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openActivityChooseTypeAlarm(TYPE_ALARM_OFF);
+            }
+        });
+
         dialog.show();
     }
 
@@ -255,6 +323,9 @@ public final class AddEditAlarmFragment extends Fragment {
             final int rowsUpdated = DatabaseHelper.getInstance(getContext()).updateAlarm(alarm);
             final int messageId = (rowsUpdated == 1) ? R.string.update_complete : R.string.update_failed;
 
+            // save typeAlarm
+            saveTypeAlarm(typeAlarm, alarm.getId());
+
             Toast.makeText(getContext(), messageId, Toast.LENGTH_SHORT).show();
 
             AlarmReceiver.setReminderAlarm(getContext(), alarm);
@@ -264,6 +335,45 @@ public final class AddEditAlarmFragment extends Fragment {
             Toast.makeText(getContext(), "Chọn ngày cần báo thức", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private void saveTypeAlarm(TypeAlarm typeAlarm, long id) {
+
+        String TABLE_NAME = "type_alarm";
+        String _ID = "_id";
+        String COL_TYPE_ALARM = "type_alarm";
+        String COL_TURN = "turn";
+        String COL_LEVEL = "level";
+        String COL_AUTO_EDIT = "auto_edit";
+        String COL_CONTENT_TYPE_WRITE = "content_type_write";
+        String COL_ID_QR = "id_qr";
+
+        dataBase = new DatabaseTypeAlarm(getContext(), "typealarm.sqlite", null, 1);
+
+        final String CREATE_TYPE_ALARMS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
+                _ID + " INTEGER PRIMARY KEY , " +
+                COL_TYPE_ALARM + " TEXT, " +
+                COL_TURN + " INTEGER , " +
+                COL_LEVEL + " INTEGER , " +
+                COL_AUTO_EDIT + " TEXT, " +
+                COL_ID_QR + " INTEGER" +
+                ");";
+
+        dataBase.queryData(CREATE_TYPE_ALARMS_TABLE);
+
+        String sql = "INSERT INTO " + TABLE_NAME + " VALUES (" +
+                id + "," +
+                "'" + typeAlarm.getTypeTurnOffAlarm() + "'" + "," +
+                typeAlarm.getTimes() + "," +
+                typeAlarm.getLevel() + "," +
+                "'" + typeAlarm.getTypeWrite() + "'" + "," +
+                "'" + typeAlarm.getNameQr() + "'" + "," +
+                "'" + typeAlarm.getQrToText() + "'" +
+                ");";
+
+        dataBase.queryData(sql);
+
+//        dataBase.addTypeAlarm(typeAlarm, id);
     }
 
     private void delete() {

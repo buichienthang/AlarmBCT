@@ -12,6 +12,7 @@
         android:id="@+id/rl_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+
         <ImageView
             android:id="@+id/im_out"
             android:layout_width="20dp"
@@ -22,11 +23,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/im_out"
             android:gravity="center_vertical"
-            android:layout_centerVertical="true"
             android:text="Back"
-            android:textColor="@color/blackblue80"/>
+            android:textColor="@color/blackblue80" />
     </RelativeLayout>
 
     <TextView
@@ -72,7 +73,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/calculator" />
+                android:src="@drawable/ic_icmath" />
 
             <View
                 android:layout_width="1dp"
@@ -87,12 +88,7 @@
                 android:textColor="@color/blackblue80"
                 android:textSize="22sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:text="3 bài toán"
-                android:textColor="@color/blue" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -110,7 +106,7 @@
                 android:layout_height="30dp"
                 android:layout_alignParentLeft="true"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/writing" />
+                android:src="@drawable/ic_icwrite" />
 
             <View
                 android:layout_width="1dp"
@@ -126,12 +122,7 @@
                 android:textColor="@color/blackblue80"
                 android:textSize="22sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:text="3 bài toán"
-                android:textColor="@color/blue" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -149,7 +140,7 @@
                 android:layout_height="30dp"
                 android:layout_alignParentLeft="true"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_qr" />
+                android:src="@drawable/ic_qrcode" />
 
 
             <View
@@ -166,12 +157,7 @@
                 android:textColor="@color/blackblue80"
                 android:textSize="22sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:text="3 bài toán"
-                android:textColor="@color/blue" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -189,7 +175,7 @@
                 android:layout_height="30dp"
                 android:layout_alignParentLeft="true"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/walking" />
+                android:src="@drawable/ic_walk" />
 
             <View
                 android:layout_width="1dp"
@@ -205,12 +191,7 @@
                 android:textColor="@color/blackblue80"
                 android:textSize="22sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:text="3 bài toán"
-                android:textColor="@color/blue" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -228,7 +209,7 @@
                 android:layout_height="30dp"
                 android:layout_alignParentLeft="true"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/vibration" />
+                android:src="@drawable/ic_vibrate" />
 
             <View
                 android:layout_width="1dp"
@@ -244,12 +225,41 @@
                 android:textColor="@color/blackblue80"
                 android:textSize="22sp" />
 
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_off"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:background="@drawable/boder_item_type_alarm"
+            android:gravity="center_vertical"
+            android:padding="@dimen/activity_horizontal_margin">
+
+            <ImageView
+                android:id="@+id/iv_vibrate"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_alarm" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/gray" />
+
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right"
-                android:text="3 bài toán"
-                android:textColor="@color/blue" />
+                android:layout_toRightOf="@+id/iv_vibrate"
+                android:text="Off"
+                android:textColor="@color/blackblue80"
+                android:textSize="22sp" />
+
+
         </LinearLayout>
     </LinearLayout>
 

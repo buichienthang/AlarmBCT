@@ -9,7 +9,7 @@ import androidx.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-public final class Alarm implements Parcelable{
+public final class Alarm implements Parcelable {
 
     private Alarm(Parcel in) {
         id = in.readLong();
@@ -46,8 +46,10 @@ public final class Alarm implements Parcelable{
     }
 
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({MON,TUES,WED,THURS,FRI,SAT,SUN})
-    @interface Days{}
+    @IntDef({MON, TUES, WED, THURS, FRI, SAT, SUN})
+    @interface Days {
+    }
+
     public static final int MON = 1;
     public static final int TUES = 2;
     public static final int WED = 3;
@@ -111,7 +113,7 @@ public final class Alarm implements Parcelable{
         return allDays;
     }
 
-    public boolean getDay(@Days int day){
+    public boolean getDay(@Days int day) {
         return allDays.get(day);
     }
 
@@ -125,7 +127,7 @@ public final class Alarm implements Parcelable{
 
     public int notificationId() {
         final long id = getId();
-        return (int) (id^(id>>>32));
+        return (int) (id ^ (id >>> 32));
     }
 
     @Override
@@ -142,11 +144,11 @@ public final class Alarm implements Parcelable{
     @Override
     public int hashCode() {
         int result = 17;
-        result = 31 * result + (int) (id^(id>>>32));
-        result = 31 * result + (int) (time^(time>>>32));
+        result = 31 * result + (int) (id ^ (id >>> 32));
+        result = 31 * result + (int) (time ^ (time >>> 32));
         result = 31 * result + label.hashCode();
-        for(int i = 0; i < allDays.size(); i++) {
-            result = 31 * result + (allDays.valueAt(i)? 1 : 0);
+        for (int i = 0; i < allDays.size(); i++) {
+            result = 31 * result + (allDays.valueAt(i) ? 1 : 0);
         }
         return result;
     }

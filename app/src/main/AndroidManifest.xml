@@ -17,19 +17,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.ActivityTypeAlarmVibrate"
+            android:name=".ui.activityTypeAlarm.CaptureActivityAnyOrientation"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activityTypeAlarm.ActivityTypeAlarmOFF"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activityTypeAlarm.ActivityTypeAlarmVibrate"
             android:exported="true" />
         <activity
-            android:name=".ui.ActivityTypeAlarmWalk"
+            android:name=".ui.activityTypeAlarm.ActivityTypeAlarmWalk"
             android:exported="true" />
         <activity
-            android:name=".ui.ActivityTypeAlarmScanQr"
+            android:name=".ui.activityTypeAlarm.ActivityTypeAlarmScanQr"
             android:exported="true" />
         <activity
-            android:name=".ui.ActivityTypeAlarmWrite"
+            android:name=".ui.activityTypeAlarm.ActivityTypeAlarmWrite"
             android:exported="true" />
         <activity
-            android:name=".ui.ActivityTypeAlarmMath"
+            android:name=".ui.activityTypeAlarm.ActivityTypeAlarmMath"
             android:exported="true" />
         <activity
             android:name=".ui.ChooseTypeAlarm"

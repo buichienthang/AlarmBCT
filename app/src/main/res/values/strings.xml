@@ -41,6 +41,7 @@
     <string name="channel_name">Simple Alarms</string>
     <string name="repeat">Repeat</string>
     <string name="alarm_type">Alarm type</string>
-    <string name="choose_type_alarm">Choose type alarm</string>
+    <string name="choose_type_alarm">How to turn off alarm</string>
+    <string name="string_math">math</string>
 
 </resources>
