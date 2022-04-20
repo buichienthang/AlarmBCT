@@ -43,5 +43,7 @@
     <string name="alarm_type">Alarm type</string>
     <string name="choose_type_alarm">How to turn off alarm</string>
     <string name="string_math">math</string>
+    <string name="type_write_auto">auto</string>
+    <string name="type_write_edit">edit</string>
 
 </resources>

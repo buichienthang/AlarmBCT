@@ -31,8 +31,19 @@ public class ActivityTypeAlarmMath extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+        typeAlarm = getIntent().getBundleExtra(BUNDLE_EXTRA).getParcelable(TYPE_ALARM_KEY);
+
         initView();
 
+        if (typeAlarm.getTypeTurnOffAlarm().equals("math")) {
+            setUpSelectRecent(typeAlarm);
+        }
+
+    }
+
+    private void setUpSelectRecent(TypeAlarm typeAlarm) {
+        npLevelMath.setValue(typeAlarm.getLevel());
+        npTurnMath.setValue(typeAlarm.getTimes());
     }
 
     private void initView() {
@@ -43,6 +54,13 @@ public class ActivityTypeAlarmMath extends AppCompatActivity {
         tvSave = findViewById(R.id.tv_save);
         npLevelMath = findViewById(R.id.np_level_math);
         npTurnMath = findViewById(R.id.np_turn_math);
+
+        tvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancel();
+            }
+        });
 
         tvSave.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -23,6 +23,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.github.ppartisan.simplealarms.R;
@@ -51,6 +52,12 @@ public final class AddEditAlarmFragment extends Fragment {
     private static final String TYPE_ALARM_VIBRATE_STRING = "vibrate";
     private static final String TYPE_ALARM_OFF_STRING = "off";
     private static final String TABLE_NAME = "type_alarm";
+    String _ID = "_id";
+    String COL_TYPE_ALARM = "type_alarm";
+    String COL_TURN = "turn";
+    String COL_LEVEL = "level";
+    String COL_AUTO_EDIT = "auto_edit";
+    String COL_ID_QR = "id_qr";
 
     private static final int TYPE_ALARM_MATH = 0;
     private static final int TYPE_ALARM_WRITE = 1;
@@ -121,7 +128,7 @@ public final class AddEditAlarmFragment extends Fragment {
         rlTypeAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openDialogTypeAlarm();
+                openDialogTypeAlarm(typeAlarm);
             }
         });
 
@@ -182,13 +189,6 @@ public final class AddEditAlarmFragment extends Fragment {
     }
 
     private void createDB() {
-        String _ID = "_id";
-        String COL_TYPE_ALARM = "type_alarm";
-        String COL_TURN = "turn";
-        String COL_LEVEL = "level";
-        String COL_AUTO_EDIT = "auto_edit";
-        String COL_CONTENT_TYPE_WRITE = "content_type_write";
-        String COL_ID_QR = "id_qr";
 
         final String CREATE_TYPE_ALARMS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY , " +
@@ -230,8 +230,8 @@ public final class AddEditAlarmFragment extends Fragment {
 
         if (typeAlarm != null) {
             return typeAlarm;
-        }else {
-            return new TypeAlarm("off",0,0,0,null);
+        } else {
+            return new TypeAlarm("off", 0, 0, 0, null);
         }
     }
 
@@ -283,10 +283,15 @@ public final class AddEditAlarmFragment extends Fragment {
                 break;
 
         }
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(TYPE_ALARM_KEY, typeAlarm);
+        intent.putExtra(BUNDLE_EXTRA, bundle);
+
         someActivityResultLauncher.launch(intent);
     }
 
-    private void openDialogTypeAlarm() {
+    private void openDialogTypeAlarm(TypeAlarm typeAlarm) {
         dialog = new Dialog(getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         dialog.setContentView(R.layout.dialog_choose_type_alarm);
 
@@ -346,6 +351,30 @@ public final class AddEditAlarmFragment extends Fragment {
             }
         });
 
+        switch (typeAlarm.getTypeTurnOffAlarm()) {
+            case TYPE_ALARM_MATH_STRING:
+                llMath.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.boder_circle_1dp_accent));
+                break;
+            case TYPE_ALARM_WRITE_STRING:
+                llWrite.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.boder_circle_1dp_accent));
+                break;
+            case TYPE_ALARM_SCANQR_STRING:
+                llScanQrCode.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.boder_circle_1dp_accent));
+                break;
+            case TYPE_ALARM_WALK_STRING:
+                llWalk.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.boder_circle_1dp_accent));
+                break;
+            case TYPE_ALARM_VIBRATE_STRING:
+                llVibrate.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.boder_circle_1dp_accent));
+                break;
+            case TYPE_ALARM_OFF_STRING:
+                llOff.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.boder_circle_1dp_accent));
+                break;
+            default:
+                llOff.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.boder_circle_1dp_accent));
+                break;
+        }
+
         dialog.show();
     }
 
@@ -403,14 +432,32 @@ public final class AddEditAlarmFragment extends Fragment {
 
     private void saveTypeAlarm(TypeAlarm typeAlarm, long id) {
 
-        String sql = "INSERT INTO " + TABLE_NAME + " VALUES (" +
-                id + "," +
-                "'" + typeAlarm.getTypeTurnOffAlarm() + "'" + "," +
-                typeAlarm.getLevel() + "," +
-                typeAlarm.getTimes() + "," +
-                "'" + typeAlarm.getIdQrcode() + "'" + "," +
-                "'" + typeAlarm.getTypeWrite() + "'" +
-                ");";
+//        INSERT INTO type_alarm(_id, type_alarm, level, turn, id_qr, auto_edit)
+//        SELECT 3, 'math', 4, 4, '0', 'null' WHERE NOT
+//        EXISTS(SELECT 1 FROM type_alarm WHERE _id = 3);
+//
+//        String sql = "INSERT INTO " + TABLE_NAME + " VALUES (" +
+//                id + "," +
+//                "'" + typeAlarm.getTypeTurnOffAlarm() + "'" + "," +
+//                typeAlarm.getLevel() + "," +
+//                typeAlarm.getTimes() + "," +
+//                "'" + typeAlarm.getIdQrcode() + "'" + "," +
+//                "'" + typeAlarm.getTypeWrite() + "'" +
+//                ") WHERE NOT EXISTS(SELECT 1 FROM " + TABLE_NAME + " WHERE id = " + id + ");";
+
+        String sql = "INSERT INTO " + TABLE_NAME + "(_id, type_alarm, level, turn,id_qr, auto_edit) " +
+                "SELECT "+id+",'"+typeAlarm.getTypeTurnOffAlarm()+"',"+typeAlarm.getLevel()+
+                ","+typeAlarm.getTimes()+",'"+typeAlarm.getIdQrcode()+"','"+typeAlarm.getTypeWrite()+
+                "' WHERE NOT EXISTS(SELECT 1 FROM "+TABLE_NAME+" WHERE _id = "+id+");";
+
+        dataBase.queryData(sql);
+
+        sql = "UPDATE " + TABLE_NAME + " SET " + COL_TYPE_ALARM + " = '" + typeAlarm.getTypeTurnOffAlarm() + "'," +
+                COL_LEVEL + "= '" + typeAlarm.getLevel() + "', " +
+                COL_TURN + "= '" + typeAlarm.getTimes() + "', " +
+                COL_ID_QR + "= '" + typeAlarm.getIdQrcode() + "', " +
+                COL_AUTO_EDIT + "= '" + typeAlarm.getTypeWrite() + "' " +
+                "WHERE _id = " + id + ";";
 
         dataBase.queryData(sql);
 

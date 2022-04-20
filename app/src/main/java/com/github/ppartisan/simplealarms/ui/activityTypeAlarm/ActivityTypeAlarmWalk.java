@@ -31,7 +31,17 @@ public class ActivityTypeAlarmWalk extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+        typeAlarm = getIntent().getBundleExtra(BUNDLE_EXTRA).getParcelable(TYPE_ALARM_KEY);
+
         initView();
+
+        if (typeAlarm.getTypeTurnOffAlarm().equals("walk")) {
+            setUpSelectRecent(typeAlarm);
+        }
+    }
+
+    private void setUpSelectRecent(TypeAlarm typeAlarm) {
+        npWalk.setValue(typeAlarm.getTimes());
     }
 
     private void initView() {
@@ -41,6 +51,13 @@ public class ActivityTypeAlarmWalk extends AppCompatActivity {
         npWalk = findViewById(R.id.np_turn_walk);
 
         setupNumberpicker();
+
+        tvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancel();
+            }
+        });
 
         tvSave.setOnClickListener(new View.OnClickListener() {
             @Override

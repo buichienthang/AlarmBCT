@@ -4,12 +4,12 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:id="@+id/rl_write_auto"
+        android:id="@+id/rl_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:background="@drawable/boder_gray80"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_horizontal_margin">
+        android:padding="@dimen/activity_horizontal_margin">
 
         <TextView
             android:id="@+id/name_qr_code"
@@ -21,14 +21,14 @@
             android:text="Các câu mẫu mặc định"
             android:textColor="@color/black" />
 
-        <CheckBox
-            android:id="@+id/cb_qr_code"
+        <TextView
+            android:id="@+id/tv_select"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:focusable="false"
-            android:focusableInTouchMode="false"/>
+            android:text="Chọn"
+            android:textColor="@color/accent"/>
     </RelativeLayout>
 
 </RelativeLayout>

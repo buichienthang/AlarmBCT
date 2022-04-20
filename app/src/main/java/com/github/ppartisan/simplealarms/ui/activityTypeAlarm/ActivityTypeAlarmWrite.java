@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,6 +47,7 @@ public class ActivityTypeAlarmWrite extends AppCompatActivity {
     private Dialog dialogDeleteContent;
     private String CONTENT_WRITE = "contentwrite";
     private String NAME_TABLE_SQL = "contentwrite.sqlite";
+    private boolean checkStartSetupRecent = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,30 @@ public class ActivityTypeAlarmWrite extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+        typeAlarm = getIntent().getBundleExtra(BUNDLE_EXTRA).getParcelable(TYPE_ALARM_KEY);
+
         initView();
+
+        if (typeAlarm.getTypeTurnOffAlarm().equals("write")) {
+            setUpSelectRecent(typeAlarm);
+        }
+    }
+
+    private void setUpSelectRecent(TypeAlarm typeAlarm) {
+        checkStartSetupRecent = true;
+        String typeWriteAuto = getResources().getString(R.string.type_write_auto);
+        String typeWriteEdit = getResources().getString(R.string.type_write_edit);
+        if (typeAlarm.getTypeWrite().equals(typeWriteAuto)) {
+            rlWriteAuto.setBackgroundResource(R.drawable.boder_circle_1dp_accent);
+            cbWriteAuto.setChecked(true);
+        } else {
+            if (typeAlarm.getTypeWrite().equals(typeWriteEdit)) {
+                rlWriteEdit.setBackgroundResource(R.drawable.boder_circle_1dp_accent);
+                cbWriteEdit.setChecked(true);
+            }
+        }
+        npTurnWrite.setValue(typeAlarm.getTimes());
+        checkStartSetupRecent = false;
     }
 
     private void setUplv() {
@@ -178,12 +203,21 @@ public class ActivityTypeAlarmWrite extends AppCompatActivity {
         cbWriteAuto = findViewById(R.id.cb_write_auto);
         cbWriteEdit = findViewById(R.id.cb_write_edit);
 
+        tvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancel();
+            }
+        });
+
         cbWriteAuto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
                     cbWriteAuto.setChecked(true);
                     cbWriteEdit.setChecked(false);
+                    rlWriteAuto.setBackgroundResource(R.drawable.boder_circle_1dp_accent);
+                    rlWriteEdit.setBackgroundResource(R.drawable.boder_gray80);
                 }
             }
         });
@@ -194,8 +228,12 @@ public class ActivityTypeAlarmWrite extends AppCompatActivity {
                 if (b) {
                     cbWriteEdit.setChecked(true);
                     cbWriteAuto.setChecked(false);
+                    rlWriteEdit.setBackgroundResource(R.drawable.boder_circle_1dp_accent);
+                    rlWriteAuto.setBackgroundResource(R.drawable.boder_gray80);
 
-                    showDialogContentEdit();
+                    if (!checkStartSetupRecent) {
+                        showDialogContentEdit();
+                    }
                 }
             }
         });
@@ -257,6 +295,14 @@ public class ActivityTypeAlarmWrite extends AppCompatActivity {
         lvContentWrite = dialogEditContent.findViewById(R.id.lv_content_edit);
         setUplv();
 
+        RelativeLayout rlBack = dialogEditContent.findViewById(R.id.rl_toolbar);
+        rlBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogEditContent.dismiss();
+            }
+        });
+
         TextView tvAddContent = dialogEditContent.findViewById(R.id.tv_add_content);
         tvAddContent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -264,25 +310,6 @@ public class ActivityTypeAlarmWrite extends AppCompatActivity {
                 showDialogAddContent();
             }
         });
-
-        RelativeLayout rlOut = dialogEditContent.findViewById(R.id.rl_back);
-        rlOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialogEditContent.dismiss();
-            }
-        });
-
-//        ImageView ivAddContentEdit = dialogEditContent.findViewById(R.id.tvad);
-//        ivAddContentEdit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // add content new
-//            }
-//        });
-
-        ListView lvContentDialog = dialogEditContent.findViewById(R.id.lv_content_edit);
-        Adapter adapter;
 
         dialogEditContent.show();
 
@@ -324,10 +351,10 @@ public class ActivityTypeAlarmWrite extends AppCompatActivity {
     private String getTypeWrite() {
         String typeWrite = "";
         if (cbWriteAuto.isChecked()) {
-            typeWrite = "auto";
+            typeWrite = getString(R.string.type_write_auto);
         }
         if (cbWriteEdit.isChecked()) {
-            typeWrite = "edit";
+            typeWrite = getString(R.string.type_write_edit);
         }
         return typeWrite;
     }

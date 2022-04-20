@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -30,6 +31,7 @@ public class ActivityTypeAlarmScanQr extends AppCompatActivity {
 
     private static final String NAME_TABLE_SQL = "qrcode.sqlite";
     private static final String QR_CODE = "qrcode";
+    private static final String TYPE_ALARM_SCANQR_STRING = "scanqr";
     TextView tvBack, tvAddQrcode;
     ListView lvQrCode;
     AdapterQrCode adapterQrCode;
@@ -41,6 +43,8 @@ public class ActivityTypeAlarmScanQr extends AppCompatActivity {
     List<Qrcode> listQrcode;
     private Dialog dialogAddNameQrcode;
     private Dialog dialogDeleteQrcode;
+    private TypeAlarm typeAlarm;
+    private  int idQrRecent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +55,17 @@ public class ActivityTypeAlarmScanQr extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+        typeAlarm = getIntent().getBundleExtra(BUNDLE_EXTRA).getParcelable(TYPE_ALARM_KEY);
+
+        if (typeAlarm.getTypeTurnOffAlarm().equals("scanqr")) {
+            setUpSelectRecent(typeAlarm);
+        }
+
         initView();
+    }
+
+    private void setUpSelectRecent(TypeAlarm typeAlarm) {
+        idQrRecent = typeAlarm.getIdQrcode();
     }
 
     private void initView() {
@@ -61,6 +75,13 @@ public class ActivityTypeAlarmScanQr extends AppCompatActivity {
         tvBack = findViewById(R.id.tv_toolbar);
         lvQrCode = findViewById(R.id.lv_qrcode);
         tvAddQrcode = findViewById(R.id.tv_add_content);
+
+        tvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancel();
+            }
+        });
 
         tvAddQrcode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +99,7 @@ public class ActivityTypeAlarmScanQr extends AppCompatActivity {
         });
 
         listQrcode = getListDataQrcode();
-        adapterQrCode = new AdapterQrCode(this, R.layout.item_listview_qrcode, listQrcode);
+        adapterQrCode = new AdapterQrCode(this, R.layout.item_listview_qrcode, listQrcode, idQrRecent);
         lvQrCode.setAdapter(adapterQrCode);
 
         lvQrCode.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -86,6 +107,15 @@ public class ActivityTypeAlarmScanQr extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 dialogRemoveQrcode(i);
                 return false;
+            }
+        });
+
+        lvQrCode.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                TypeAlarm typeAlarm = new TypeAlarm(TYPE_ALARM_SCANQR_STRING,0,0,
+                        listQrcode.get(i).getId(),null);
+                save(typeAlarm);
             }
         });
 
